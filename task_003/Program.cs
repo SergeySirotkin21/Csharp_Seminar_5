@@ -11,7 +11,7 @@ int ReadInt(string text)// программа ввода чмсла
     System.Console.Write(text);
     return Convert.ToInt32(Console.ReadLine());
 }
-// программа заполнения двмерного массива
+// программа заполнения двумерного массива
 int[,] GenerateMatrix(int row, int col, int leftRange, int rightRange)
 {
     int[,] tempMatrix = new int[row, col];
@@ -30,6 +30,7 @@ int[,] GenerateMatrix(int row, int col, int leftRange, int rightRange)
 // Программа вывода на печать двумерного массива
 void PrintMatrix(int[,] matrixForPrint)
 {
+
     for (int i = 0; i < matrixForPrint.GetLength(0); i++)
     {
         for (int j = 0; j < matrixForPrint.GetLength(1); j++)
@@ -39,92 +40,45 @@ void PrintMatrix(int[,] matrixForPrint)
         System.Console.WriteLine();
     }
 }
-// Программа нахождения элементов массива
-void ChangeMatrix(int[,] matrix)
+// Программа нахождения строки с наиеньшей суммой элементов 
+int ChangeMatrix(int[,] matrix)
 {
-    for (int i = 0; i < matrix.GetLength(0); i += 2)
-    {
-        for (int j = 0; j < matrix.GetLength(1); j += 2)
+    int[] sumArray = new int[matrix.GetLength(0)];
+    for (int i = 0; i < matrix.GetLength(0); i ++)
+    { 
+        for (int j = 0; j < matrix.GetLength(1); j ++)
         {
-            matrix[i, j] = (int)Math.Pow(matrix[i, j], 2);
+            sumArray[i] += matrix[i, j];
         }
     }
-}
-
-// ------------------------------------------
+    int minSum = sumArray[0];
+    int minIndex = 0; 
+    for (int i = 1; i< matrix.GetLength(0); i++)
+    {
+        if (sumArray[i] < minSum)
+            {
+                minSum = sumArray[i];
+                minIndex = i;
+            }
+    }
+    return minIndex;
+}      
+ 
+// Решение задачи
 int rows = ReadInt("Введите количество строк массива: ");
 int cols = ReadInt("Введите количество столбцов массива: ");
 
 //  Заполнение массива
-int[,] matrix = GenerateMatrix(rows, cols, -9, 9);
+int[,] matrix = GenerateMatrix(rows, cols, 1, 9);
 
 // Вывод массива
 PrintMatrix(matrix);
 
-// // Нахождение элементов массива с четными индексами и возведение их в квадрат
-ChangeMatrix(matrix);
-
+// Нахождение строки с наименьшей суммой элементов
+int minIndex = ChangeMatrix(matrix);
+       
+//  разделение соообщений
 System.Console.WriteLine();
 
-// // Вывод массива
-PrintMatrix(matrix);
-// // Программа нахождения суммы диагонали массива Задача 2
-// int SumMainDiagonal(int[,] matrix)
-// {
-//     int sum = 0;
-
-//     for (int i = 0; i < matrix.GetLength(0) && i < matrix.GetLength(1); i++)
-//     {
-//         sum += matrix[i, i];
-//     }
-
-//     return sum;
-// }
-// // ------------------------------------------
-
-// int rows = ReadInt("Введите количество строк массива: ");
-// int cols = ReadInt("Введите количество столбцов массива: ");
-
-// //  Заполнение массива
-// int[,] matrix = GenerateMatrix(rows, cols, -9, 9);
-
-// // Вывод массива
-// PrintMatrix(matrix);
-
-// System.Console.WriteLine(SumMainDiagonal(matrix));
-// // Программа нахождения среднего арифметического Задача 3
-// double[] FindAverageInRows(int[,] matrix)
-// {
-//     double[] averageArray = new double[matrix.GetLength(0)];
-
-//     for (int i = 0; i < matrix.GetLength(0); i++)
-//     {
-//         for (int j = 0; j < matrix.GetLength(1); j++)
-//         {
-//             averageArray[i] += matrix[i, j];
-//         }
-//         averageArray[i] = Math.Round(averageArray[i] / matrix.GetLength(1), 3);
-//     }
-
-//     return averageArray;
-// }
-
-// void PrintArray(double[] array)
-// {
-//     Console.WriteLine("[ " + string.Join(" | ", array) + " ]");
-// }
-
-// // ------------------------------------------
-
-// int rows = ReadInt("Введите количество строк массива: ");
-// int cols = ReadInt("Введите количество столбцов массива: ");
-
-// //  Заполнение массива
-// int[,] matrix = GenerateMatrix(rows, cols, -9, 9);
-
-// // Вывод массива
-// PrintMatrix(matrix);
-
-// double[] averageArray = FindAverageInRows(matrix);
-
-// PrintArray(averageArray);
+// Вывод сообщения
+System.Console.WriteLine($" => строка c индексом {minIndex}");
