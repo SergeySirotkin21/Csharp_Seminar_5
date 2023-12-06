@@ -9,12 +9,7 @@
 // 2 6 9 4 6
 // 4 6 2
 
-int ReadInt(string text)// программа ввода чмсла
-{
-    System.Console.Write(text);
-    return Convert.ToInt32(Console.ReadLine());
-}
-// программа заполнения двмерного массива
+// программа заполнения двумерного массива
 int[,] GenerateMatrix(int row, int col, int leftRange, int rightRange)
 {
     int[,] tempMatrix = new int[row, col];
@@ -42,92 +37,55 @@ void PrintMatrix(int[,] matrixForPrint)
         System.Console.WriteLine();
     }
 }
-// Программа нахождения элементов массива
-void ChangeMatrix(int[,] matrix)
+// Программа нахождения индексов наименьшего элемента массива
+void FindMinIndexes(int[,] matrix, out int iIndex, out int jIndex)
 {
-    for (int i = 0; i < matrix.GetLength(0); i += 2)
+    iIndex = 0;
+    jIndex = 0;
+
+    for (int i = 0; i < matrix.GetLength(0); i++)
     {
-        for (int j = 0; j < matrix.GetLength(1); j += 2)
+        for (int j = 0; j < matrix.GetLength(1); j++)
         {
-            matrix[i, j] = (int)Math.Pow(matrix[i, j], 2);
+            if (matrix[i, j] < matrix[iIndex, jIndex])
+            {
+                iIndex = i;
+                jIndex = j;
+            }
         }
     }
 }
+// Программа удаления строки и стобца с наименьшим элементом
+int[,] DeleteRowAndCol(int[,] matrix, int iMin, int jMin)
+{
+    // новая матрица меньшего размера
+    int[,] newMatrix = new int[matrix.GetLength(0) - 1, matrix.GetLength(1) - 1];
 
-// ------------------------------------------
-int rows = ReadInt("Введите количество строк массива: ");
-int cols = ReadInt("Введите количество столбцов массива: ");
+    for (int i = 0, x = 0; i < matrix.GetLength(0); i++)
+    {
+        if(i == iMin) continue; //с этой строкой дальше не работаем
 
-//  Заполнение массива
-int[,] matrix = GenerateMatrix(rows, cols, -9, 9);
+        for (int j = 0, y = 0; j < matrix.GetLength(1); j++)
+        {
+            if(j == jMin) continue; //с этим элементом строки дальше не работаем
 
-// Вывод массива
-PrintMatrix(matrix);
+            newMatrix[x, y] = matrix[i,j];
+            y++;
+        }
+        x++;
+    }
 
-// // Нахождение элементов массива с четными индексами и возведение их в квадрат
-ChangeMatrix(matrix);
-
+    return newMatrix;
+}
+// решение задачи:
+// создали и распечатали массив
+int[,] oldMatrix = GenerateMatrix(5, 5, -5, 10);
+PrintMatrix(oldMatrix);
+// нашли и вывели индексы элемента с мин значением с разрывом между строками 
+FindMinIndexes(oldMatrix, out int iMin, out int jMin);
 System.Console.WriteLine();
-
-// // Вывод массива
-PrintMatrix(matrix);
-// // Программа нахождения суммы диагонали массива Задача 2
-// int SumMainDiagonal(int[,] matrix)
-// {
-//     int sum = 0;
-
-//     for (int i = 0; i < matrix.GetLength(0) && i < matrix.GetLength(1); i++)
-//     {
-//         sum += matrix[i, i];
-//     }
-
-//     return sum;
-// }
-// // ------------------------------------------
-
-// int rows = ReadInt("Введите количество строк массива: ");
-// int cols = ReadInt("Введите количество столбцов массива: ");
-
-// //  Заполнение массива
-// int[,] matrix = GenerateMatrix(rows, cols, -9, 9);
-
-// // Вывод массива
-// PrintMatrix(matrix);
-
-// System.Console.WriteLine(SumMainDiagonal(matrix));
-// // Программа нахождения среднего арифметического Задача 3
-// double[] FindAverageInRows(int[,] matrix)
-// {
-//     double[] averageArray = new double[matrix.GetLength(0)];
-
-//     for (int i = 0; i < matrix.GetLength(0); i++)
-//     {
-//         for (int j = 0; j < matrix.GetLength(1); j++)
-//         {
-//             averageArray[i] += matrix[i, j];
-//         }
-//         averageArray[i] = Math.Round(averageArray[i] / matrix.GetLength(1), 3);
-//     }
-
-//     return averageArray;
-// }
-
-// void PrintArray(double[] array)
-// {
-//     Console.WriteLine("[ " + string.Join(" | ", array) + " ]");
-// }
-
-// // ------------------------------------------
-
-// int rows = ReadInt("Введите количество строк массива: ");
-// int cols = ReadInt("Введите количество столбцов массива: ");
-
-// //  Заполнение массива
-// int[,] matrix = GenerateMatrix(rows, cols, -9, 9);
-
-// // Вывод массива
-// PrintMatrix(matrix);
-
-// double[] averageArray = FindAverageInRows(matrix);
-
-// PrintArray(averageArray);
+System.Console.WriteLine(iMin + " " + jMin);
+System.Console.WriteLine();
+//создали и распечатали новую матрицу без строки и столбца с мин значением элемента
+int[,] newmatrix = (DeleteRowAndCol(oldMatrix, iMin, jMin));
+PrintMatrix(newmatrix);
